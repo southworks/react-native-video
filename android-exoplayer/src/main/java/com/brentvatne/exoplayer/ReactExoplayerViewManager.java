@@ -52,9 +52,10 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     private static final String PROP_RATE = "rate";
     private static final String PROP_MAXIMUM_BIT_RATE = "maxBitRate";
     private static final String PROP_PLAY_IN_BACKGROUND = "playInBackground";
-    private static final String PROP_DRM_LICENSE_URL = "drmUrl";
-    private static final String PROP_DRM_LICENSE_HEADER = "drmHeader";
-    private static final String PROP_DRM_NAME = "drmName";
+    private static final String PROP_DRM_LICENSE_URL = "drm";
+    // private static final String PROP_DRM_LICENSE_URL = "drmUrl";
+    // private static final String PROP_DRM_LICENSE_HEADER = "drmHeader";
+    // private static final String PROP_DRM_NAME = "drmName";
     private static final String PROP_DISABLE_FOCUS = "disableFocus";
     private static final String PROP_FULLSCREEN = "fullscreen";
     private static final String PROP_USE_TEXTURE_VIEW = "useTextureView";
@@ -257,13 +258,28 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
         }
     }
 
-    @ReactProp(name = PROP_DRM_LICENSE_URL)
+    @ReactProp(name = PROP_DRM)
+    public void setDrm(final ReactExoplayerView videoView, @Nullable ReadableMap drm){
+        if (drm) {
+            if (drm.type) {
+                this.setDrmName(videoView, drm.type);
+            }
+            if (drm.licenseServer) {
+                this.setDrmUrl(videoView, drm.licenseServer);
+            }
+            if (drm.headers) {
+                this.setDrmHeader(videoView, drm.headers);
+            }
+        }
+    }
+
+    // @ReactProp(name = PROP_DRM_LICENSE_URL)
     public void setDrmUrl(final ReactExoplayerView videoView, @Nullable String licenseUrl){
         Log.d("setDrmUrl", licenseUrl);
         videoView.setDrmLicenseUrl(licenseUrl);
     }
 
-    @ReactProp(name = PROP_DRM_LICENSE_HEADER)
+    // @ReactProp(name = PROP_DRM_LICENSE_HEADER)
     public void setDrmHeader(final ReactExoplayerView videoView, @Nullable ReadableMap headers){
         ArrayList<String> drmKeyRequestPropertiesList = new ArrayList<>();
         ReadableMapKeySetIterator itr = headers.keySetIterator();
@@ -275,7 +291,7 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
         videoView.setDrmLicenseHeader(drmKeyRequestPropertiesList.toArray(new String[0]));
     }
     
-    @ReactProp(name = PROP_DRM_NAME)
+    // @ReactProp(name = PROP_DRM_NAME)
     public void setDrmName(final ReactExoplayerView videoView, final String drmName){
         try {
             videoView.setDrmName(drmName);

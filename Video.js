@@ -365,9 +365,11 @@ Video.propTypes = {
   paused: PropTypes.bool,
   muted: PropTypes.bool,
   volume: PropTypes.number,
-  drmUrl: PropTypes.string,
-  drmName: PropTypes.string,
-  drmHeader: PropTypes.object,
+  drm: PropTypes.shape({
+    type: PropTypes.oneOf(["playready", "widevine", "cenc"]),
+    licenseServer: PropTypes.string,
+    headers: PropTypes.object,
+  }),
   bufferConfig: PropTypes.shape({
     minBufferMs: PropTypes.number,
     maxBufferMs: PropTypes.number,
