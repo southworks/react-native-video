@@ -52,7 +52,7 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     private static final String PROP_RATE = "rate";
     private static final String PROP_MAXIMUM_BIT_RATE = "maxBitRate";
     private static final String PROP_PLAY_IN_BACKGROUND = "playInBackground";
-    private static final String PROP_DRM_LICENSE_URL = "drm";
+    private static final String PROP_DRM = "drm";
     // private static final String PROP_DRM_LICENSE_URL = "drmUrl";
     // private static final String PROP_DRM_LICENSE_HEADER = "drmHeader";
     // private static final String PROP_DRM_NAME = "drmName";
@@ -260,15 +260,15 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
 
     @ReactProp(name = PROP_DRM)
     public void setDrm(final ReactExoplayerView videoView, @Nullable ReadableMap drm){
-        if (drm) {
-            if (drm.type) {
-                this.setDrmName(videoView, drm.type);
+        if (drm != null) {
+            if (drm.hasKey("type")) {
+                this.setDrmName(videoView, drm.getString("type"));
             }
-            if (drm.licenseServer) {
-                this.setDrmUrl(videoView, drm.licenseServer);
+            if (drm.hasKey("licenseServer")) {
+                this.setDrmUrl(videoView, drm.getString("licenseServer"));
             }
-            if (drm.headers) {
-                this.setDrmHeader(videoView, drm.headers);
+            if (drm.hasKey("headers")) {
+                this.setDrmHeader(videoView, drm.getMap("headers"));
             }
         }
     }
