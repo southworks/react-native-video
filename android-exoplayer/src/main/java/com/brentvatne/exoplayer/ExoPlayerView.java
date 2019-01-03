@@ -52,6 +52,7 @@ public final class ExoPlayerView extends FrameLayout {
     public ExoPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        boolean useTextureView = true;
         this.context = context;
 
         layoutParams = new ViewGroup.LayoutParams(
@@ -126,6 +127,13 @@ public final class ExoPlayerView extends FrameLayout {
             this.player.setTextOutput(null);
             this.player.setVideoListener(null);
             this.player.removeListener(componentListener);
+            if (surfaceView instanceof TextureView) {
+                this.player.clearVideoTextureView((TextureView) surfaceView);
+
+            } else if (surfaceView instanceof SurfaceView) {
+                this.player.clearVideoSurfaceView((SurfaceView) surfaceView);
+            }
+            this.player.setMetadataOutput(componentListener);
             this.player.setVideoSurface(null);
         }
         this.player = player;
@@ -237,6 +245,11 @@ public final class ExoPlayerView extends FrameLayout {
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             // Do nothing.
+        }
+
+        @Override
+        public void onRepeatModeChanged(int repeatMode) {
+
         }
 
         @Override
