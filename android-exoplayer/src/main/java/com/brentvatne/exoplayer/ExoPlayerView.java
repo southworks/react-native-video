@@ -18,8 +18,6 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.metadata.MetadataRenderer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.Cue;
 import com.google.android.exoplayer2.text.TextRenderer;
@@ -31,12 +29,17 @@ import java.util.List;
 @TargetApi(16)
 public final class ExoPlayerView extends FrameLayout {
 
-    private final View surfaceView;
+    private View surfaceView;
     private final View shutterView;
     private final SubtitleView subtitleLayout;
     private final AspectRatioFrameLayout layout;
     private final ComponentListener componentListener;
     private SimpleExoPlayer player;
+    private Context context;
+    private ViewGroup.LayoutParams layoutParams;
+
+    private boolean useTextureView = true;
+    private boolean hideShutterView = false;
 
     public ExoPlayerView(Context context) {
         this(context, null);
@@ -50,8 +53,9 @@ public final class ExoPlayerView extends FrameLayout {
         super(context, attrs, defStyleAttr);
 
         boolean useTextureView = true;
+        this.context = context;
 
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+        layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -65,23 +69,47 @@ public final class ExoPlayerView extends FrameLayout {
         layout.setLayoutParams(aspectRatioParams);
 
         shutterView = new View(getContext());
-        shutterView.setLayoutParams(params);
+        shutterView.setLayoutParams(layoutParams);
         shutterView.setBackgroundColor(ContextCompat.getColor(context, android.R.color.black));
 
         subtitleLayout = new SubtitleView(context);
-        subtitleLayout.setLayoutParams(params);
+        subtitleLayout.setLayoutParams(layoutParams);
         subtitleLayout.setUserDefaultStyle();
         subtitleLayout.setUserDefaultTextSize();
 
-        View view = useTextureView ? new TextureView(context) : new SurfaceView(context);
-        view.setLayoutParams(params);
-        surfaceView = view;
+        updateSurfaceView();
 
-        layout.addView(surfaceView, 0, params);
-        layout.addView(shutterView, 1, params);
-        layout.addView(subtitleLayout, 2, params);
+        layout.addView(shutterView, 1, layoutParams);
+        layout.addView(subtitleLayout, 2, layoutParams);
 
         addViewInLayout(layout, 0, aspectRatioParams);
+    }
+
+    private void setVideoView() {
+        if (surfaceView instanceof TextureView) {
+            player.setVideoTextureView((TextureView) surfaceView);
+        } else if (surfaceView instanceof SurfaceView) {
+            player.setVideoSurfaceView((SurfaceView) surfaceView);
+        }
+    }
+
+    private void updateSurfaceView() {
+        View view = useTextureView ? new TextureView(context) : new SurfaceView(context);
+        view.setLayoutParams(layoutParams);
+
+        surfaceView = view;
+        if (layout.getChildAt(0) != null) {
+            layout.removeViewAt(0);
+        }
+        layout.addView(surfaceView, 0, layoutParams);
+
+        if (this.player != null) {
+            setVideoView();
+        }
+    }
+
+    private void updateShutterViewVisibility() {
+        shutterView.setVisibility(this.hideShutterView ? View.INVISIBLE : View.VISIBLE);
     }
 
     /**
@@ -106,19 +134,15 @@ public final class ExoPlayerView extends FrameLayout {
                 this.player.clearVideoSurfaceView((SurfaceView) surfaceView);
             }
             this.player.setMetadataOutput(componentListener);
+            this.player.setVideoSurface(null);
         }
         this.player = player;
         shutterView.setVisibility(VISIBLE);
         if (player != null) {
-            if (surfaceView instanceof TextureView) {
-                player.setVideoTextureView((TextureView) surfaceView);
-            } else if (surfaceView instanceof SurfaceView) {
-                player.setVideoSurfaceView((SurfaceView) surfaceView);
-            }
+            setVideoView();
             player.setVideoListener(componentListener);
             player.addListener(componentListener);
             player.setTextOutput(componentListener);
-            player.setMetadataOutput(componentListener);
         }
     }
 
@@ -143,6 +167,18 @@ public final class ExoPlayerView extends FrameLayout {
      */
     public View getVideoSurfaceView() {
         return surfaceView;
+    }
+
+    public void setUseTextureView(boolean useTextureView) {
+        if (useTextureView != this.useTextureView) {
+            this.useTextureView = useTextureView;
+            updateSurfaceView();
+        }
+    }
+
+    public void setHideShutterView(boolean hideShutterView) {
+        this.hideShutterView = hideShutterView;
+        updateShutterViewVisibility();
     }
 
     private final Runnable measureAndLayout = new Runnable() {
@@ -172,7 +208,7 @@ public final class ExoPlayerView extends FrameLayout {
     }
 
     private final class ComponentListener implements SimpleExoPlayer.VideoListener,
-            TextRenderer.Output, ExoPlayer.EventListener, MetadataRenderer.Output {
+            TextRenderer.Output, ExoPlayer.EventListener {
 
         // TextRenderer.Output implementation
 
@@ -222,12 +258,12 @@ public final class ExoPlayerView extends FrameLayout {
         }
 
         @Override
-        public void onPositionDiscontinuity() {
+        public void onPositionDiscontinuity(int reason) {
             // Do nothing.
         }
 
         @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
+        public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
             // Do nothing.
         }
 
@@ -242,8 +278,18 @@ public final class ExoPlayerView extends FrameLayout {
         }
 
         @Override
-        public void onMetadata(Metadata metadata) {
-            Log.d("onMetadata", "onMetadata");
+        public void onSeekProcessed() {
+            // Do nothing.
+        }
+
+        @Override
+        public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+            // Do nothing.
+        }
+
+        @Override
+        public void onRepeatModeChanged(int repeatMode) {
+            // Do nothing.
         }
     }
 
