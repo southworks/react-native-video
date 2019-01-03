@@ -16,11 +16,8 @@ import com.facebook.react.uimanager.annotations.ReactProp;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
 import java.util.HashMap;
->>>>>>> master
 import java.util.Map;
 
 import javax.annotation.Nullable;

@@ -133,7 +133,7 @@ public final class ExoPlayerView extends FrameLayout {
             } else if (surfaceView instanceof SurfaceView) {
                 this.player.clearVideoSurfaceView((SurfaceView) surfaceView);
             }
-            this.player.setMetadataOutput(componentListener);
+            // this.player.setMetadataOutput(componentListener);
             this.player.setVideoSurface(null);
         }
         this.player = player;
@@ -284,11 +284,6 @@ public final class ExoPlayerView extends FrameLayout {
 
         @Override
         public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-            // Do nothing.
-        }
-
-        @Override
-        public void onRepeatModeChanged(int repeatMode) {
             // Do nothing.
         }
     }

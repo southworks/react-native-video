@@ -71,26 +71,20 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-<<<<<<< HEAD
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
-=======
 import com.google.android.exoplayer2.util.MimeTypes;
->>>>>>> master
 import com.google.android.exoplayer2.util.Util;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.lang.Math;
-<<<<<<< HEAD
 import java.util.UUID;
-=======
 import java.util.Map;
 import java.lang.Object;
 import java.util.ArrayList;
 import java.util.Locale;
->>>>>>> master
 
 @SuppressLint("ViewConstructor")
 class ReactExoplayerView extends FrameLayout implements
@@ -156,14 +150,11 @@ class ReactExoplayerView extends FrameLayout implements
     private boolean disableFocus;
     private float mProgressUpdateInterval = 250.0f;
     private boolean playInBackground = false;
-<<<<<<< HEAD
     private UUID drmUUID = null;
     private String drmLicenseUrl = null;
     private String[] drmLicenseHeader = null;
-=======
     private Map<String, String> requestHeaders;
     private boolean mReportBandwidth = false;
->>>>>>> master
     // \ End props
 
     // React
@@ -274,8 +265,6 @@ class ReactExoplayerView extends FrameLayout implements
         stopPlayback();
     }
 
-<<<<<<< HEAD
-=======
     //BandwidthMeter.EventListener implementation
     @Override
     public void onBandwidthSample(int elapsedMs, long bytes, long bitrate) {
@@ -284,14 +273,12 @@ class ReactExoplayerView extends FrameLayout implements
         }
     }
 
->>>>>>> master
     // Internal methods
     private void initializePlayer() {
         Log.d("initializePlayer", "drm url");
         if (player == null) {
             TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
             trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-<<<<<<< HEAD
 
             DrmSessionManager<FrameworkMediaCrypto> drmSessionManager = null;
             if (this.drmUUID != null) {
@@ -307,18 +294,13 @@ class ReactExoplayerView extends FrameLayout implements
                 }
             }
 
-            DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(getContext(),
-                    drmSessionManager, DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-
-            player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector);
-=======
+            // player = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector);
             trackSelector.setParameters(trackSelector.buildUponParameters()
                             .setMaxVideoBitrate(maxBitRate == 0 ? Integer.MAX_VALUE : maxBitRate));
 
             DefaultAllocator allocator = new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE);
             DefaultLoadControl defaultLoadControl = new DefaultLoadControl(allocator, minBufferMs, maxBufferMs, bufferForPlaybackMs, bufferForPlaybackAfterRebufferMs, -1, true);
             player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, defaultLoadControl);
->>>>>>> master
             player.addListener(this);
             player.setMetadataOutput(this);
             exoPlayerView.setPlayer(player);
@@ -609,11 +591,6 @@ class ReactExoplayerView extends FrameLayout implements
                 break;
         }
         Log.d(TAG, text);
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-
     }
 
     private void startProgressHandler() {
