@@ -27,7 +27,9 @@ static int const RCTVideoUnset = -1;
   AVPlayer *_player;
   AVPlayerItem *_playerItem;
   NSDictionary *_source;
+#if !(TARGET_OS_TV)
   AVPictureInPictureController *_pipController;
+#endif
   void (^__strong _Nonnull _restoreUserInterfaceForPIPStopCompletionHandler)(BOOL);
   BOOL _playerItemObserversSet;
   BOOL _playerBufferEmpty;
@@ -819,6 +821,8 @@ static int const RCTVideoUnset = -1;
   _playWhenInactive = playWhenInactive;
 }
 
+#pragma mark - PiP
+#if !(TARGET_OS_TV)
 - (void)setPictureInPicture:(BOOL)pictureInPicture
 {
   if (_pictureInPicture == pictureInPicture) {
@@ -828,11 +832,11 @@ static int const RCTVideoUnset = -1;
   _pictureInPicture = pictureInPicture;
   if (_pipController && _pictureInPicture && ![_pipController isPictureInPictureActive]) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [_pipController startPictureInPicture];
+        [self->_pipController startPictureInPicture];
     });
   } else if (_pipController && !_pictureInPicture && [_pipController isPictureInPictureActive]) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      [_pipController stopPictureInPicture];
+        [self->_pipController stopPictureInPicture];
 	});
   }
 }
@@ -852,6 +856,7 @@ static int const RCTVideoUnset = -1;
     _pipController.delegate = self;
   }
 }
+#endif
 
 - (void)setIgnoreSilentSwitch:(NSString *)ignoreSilentSwitch
 {
@@ -1307,8 +1312,9 @@ static int const RCTVideoUnset = -1;
     
     [self.layer addSublayer:_playerLayer];
     self.layer.needsDisplayOnBoundsChange = YES;
-
+#if !(TARGET_OS_TV)
     [self setupPipController];
+#endif
   }
 }
 
@@ -1795,7 +1801,7 @@ static int const RCTVideoUnset = -1;
     return nil;
 }
 #pragma mark - Picture in Picture
-
+#if !(TARGET_OS_TV)
 - (void)pictureInPictureControllerDidStopPictureInPicture:(AVPictureInPictureController *)pictureInPictureController {
   if (self.onPictureInPictureStatusChanged) {
     self.onPictureInPictureStatusChanged(@{
@@ -1831,5 +1837,5 @@ static int const RCTVideoUnset = -1;
   }
   _restoreUserInterfaceForPIPStopCompletionHandler = completionHandler;
 }
-
+#endif
 @end
