@@ -111,7 +111,7 @@ static int const RCTVideoUnset = -1;
     _pictureInPicture = false;
     _ignoreSilentSwitch = @"inherit"; // inherit, ignore, obey
     _textTrackFontSize = -1;
-    -textTrackPaddingBottom = -1;
+    _textTrackPaddingBottom = -1;
 #if TARGET_OS_IOS
     _restoreUserInterfaceForPIPStopCompletionHandler = NULL;
 #endif
