@@ -748,6 +748,22 @@ Adjust the balance of the left and right audio channels.  Any value between –1
 
 Platforms: Android MediaPlayer
 
+#### textTrackFontSize
+Adjust the font size of the subtitles.
+
+* **Default font size of the device** - The default value for this props
+* **Other values (int)** - Change the font size
+
+Platforms: Android ExoPlayer, iOS
+
+#### textTrackPaddingBottom
+Adjust the padding botton of the subtitles.
+
+* **0.1 (default)** - Give a padding botton of 0.1
+* **Other values (float)** - Change the padding botton
+
+Platforms: Android ExoPlayer, iOS
+
 #### textTracks
 Load one or more "sidecar" text tracks. This takes an array of objects representing each track. Each object should have the format:
 
@@ -782,7 +798,6 @@ textTracks={[
 ]}
 ```
 
-
 Platforms: Android ExoPlayer, iOS
 
 #### useTextureView
@@ -806,20 +821,6 @@ Adjust the volume.
 * **Other values** - Reduce volume
 
 Platforms: all
-
-#### fontSizeTrack
-Adjust the font size of the subtitles in Android.
-* **Default font size of the device** - The default value for this props
-* **Other values (int)** - Change the font size
-
-Platforms: Android ExoPlayer
-
-#### paddingBottonTrack
-Adjust the padding botton of the subtitles in Android.
-* **0.1 (default)** - Give a padding botton of 0.1
-* **Other values (float)** - Change the padding botton
-
-Platforms: Android ExoPlayer
 
 ### Event props
 

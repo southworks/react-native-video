@@ -59,8 +59,8 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     private static final String PROP_SELECTED_VIDEO_TRACK_VALUE = "value";
     private static final String PROP_HIDE_SHUTTER_VIEW = "hideShutterView";
     private static final String PROP_CONTROLS = "controls";
-    private static final String PROP_FRONT_SIZE_TRACK = "fontSizeTrack";
-    private static final String PROP_PADDIND_BOTTON_TRACK = "paddingBottonTrack";
+    private static final String PROP_FRONT_SIZE_TRACK = "textTrackFontSize";
+    private static final String PROP_PADDIND_BOTTOM_TRACK = "textTrackPaddingBottom";
 
     @Override
     public String getName() {
@@ -270,13 +270,13 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     }
 
     @ReactProp(name = PROP_FRONT_SIZE_TRACK)
-    public void setFontSizeTrack(final ReactExoplayerView videoView, final int fontSizeTrack) {
-        videoView.setFontSizeTrack(fontSizeTrack);
+    public void setTextTrackFontSize(final ReactExoplayerView videoView, final int textTrackFontSize) {
+        videoView.setTextTrackFontSize(textTrackFontSize);
     }
 
-    @ReactProp(name = PROP_PADDIND_BOTTON_TRACK, defaultFloat = 0.1f)
-    public void setPaddingBottonTrack(final ReactExoplayerView videoView, final float paddingBottonTrack) {
-        videoView.setPaddingBottonTrack(paddingBottonTrack);
+    @ReactProp(name = PROP_PADDIND_BOTTOM_TRACK, defaultFloat = 0.1f)
+    public void setTextTrackPaddingBottom(final ReactExoplayerView videoView, final float textTrackPaddingBottom) {
+        videoView.setTextTrackPaddingBottom(textTrackPaddingBottom);
     }
 
     @ReactProp(name = PROP_BUFFER_CONFIG)
