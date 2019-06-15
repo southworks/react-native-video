@@ -985,8 +985,7 @@ static int const RCTVideoUnset = -1;
     [textTrackStyleRules setObject:@((_textTrackFontSize / 10) * 100) forKey:(id)kCMTextMarkupAttribute_RelativeFontSize];
   }
   if (_textTrackPaddingBottom) {
-    CGFloat playerHeight = self.layer.frame.size.height;
-    [textTrackStyleRules setObject:@(100 - (((playerHeight * _textTrackPaddingBottom) / playerHeight) * 100)) forKey:(id)kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection];
+    [textTrackStyleRules setObject:@(100 - (_textTrackPaddingBottom * 100)) forKey:(id)kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection];
   }
 }
 
