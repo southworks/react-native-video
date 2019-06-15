@@ -983,14 +983,15 @@ static int const RCTVideoUnset = -1;
   [self setAllowsExternalPlayback:_allowsExternalPlayback];
   NSMutableDictionary* textTrackStyleRules = [[NSMutableDictionary alloc] initWithCapacity: 2];
   if (_textTrackFontSize != -1) {
-    // TODO: Check if 10 is always the default track fontSize
+    // TODO: Check if 10 is the default track fontSize
     [textTrackStyleRules setObject:@((_textTrackFontSize / 10) * 100) forKey:(id)kCMTextMarkupAttribute_RelativeFontSize];
   }
   if (_textTrackPaddingBottom != -1) {
     [textTrackStyleRules setObject:@(100 - (_textTrackPaddingBottom * 100)) forKey:(id)kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection];
   }
-  if(textTrackStyleRules.count > 0) {
-    _player.currentItem.textStyleRules = @[textTrackStyleRules];
+  if(_player && textTrackStyleRules.count > 0) {
+    AVTextStyleRule* textStyleRules = [[AVTextStyleRule alloc] initWithTextMarkupAttributes:textTrackStyleRules];
+    _player.currentItem.textStyleRules = @[textStyleRules];
   }
 }
 
