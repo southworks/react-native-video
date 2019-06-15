@@ -59,6 +59,8 @@ static int const RCTVideoUnset = -1;
   BOOL _repeat;
   BOOL _allowsExternalPlayback;
   NSArray * _textTracks;
+  float _textTrackFontSize;
+  float _textTrackPaddingBottom;
   NSDictionary * _selectedTextTrack;
   NSDictionary * _selectedAudioTrack;
   BOOL _playbackStalled;
@@ -976,6 +978,15 @@ static int const RCTVideoUnset = -1;
   [self setPaused:_paused];
   [self setControls:_controls];
   [self setAllowsExternalPlayback:_allowsExternalPlayback];
+  NSMutableDictionary* textTrackStyleRules = [[NSMutableDictionary alloc] initWithCapacity: 2];
+  if (_textTrackFontSize) {
+    // TODO: Check if 10 is always the default track fontSize
+    [textTrackStyleRules setObject:@((_textTrackFontSize / 10) * 100) forKey:(id)kCMTextMarkupAttribute_RelativeFontSize];
+  }
+  if (_textTrackPaddingBottom) {
+    CGFloat playerHeight = self.layer.frame.size.height;
+    [textTrackStyleRules setObject:@(100 - ((_textTrackPaddingBottom / playerHeight) * 100)) forKey:(id)kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection];
+  }
 }
 
 - (void)setRepeat:(BOOL)repeat {
@@ -1161,6 +1172,18 @@ static int const RCTVideoUnset = -1;
   
   // in case textTracks was set after selectedTextTrack
   if (_selectedTextTrack) [self setSelectedTextTrack:_selectedTextTrack];
+}
+
+- (void)setTextTrackFontSize:(float) textTrackFontSize;
+{
+  _textTrackFontSize = textTrackFontSize;
+  [self applyModifiers];
+}
+
+- (void)setTextTrackPaddingBottom:(float) textTrackPaddingBottom;
+{
+  _textTrackPaddingBottom = textTrackPaddingBottom;
+  [self applyModifiers];
 }
 
 - (NSArray *)getAudioTrackInfo
