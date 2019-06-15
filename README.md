@@ -757,7 +757,10 @@ Adjust the font size of the subtitles.
 Platforms: Android ExoPlayer, iOS
 
 #### textTrackPaddingBottom
-Adjust the padding botton of the subtitles.
+Adjust the padding botton of the subtitles. Its value is a ratio of the screen height.
+So 0.5 = 50% and 0 = 0% (bottom of the screen)
+Take into account that iOS clamps the value and doesn't allow to place the subtitles on the edge.
+If the value is setted, on iOS the native VTT's `line:X%` will be ignored.
 
 * **0.1 (default)** - Give a padding botton of 0.1
 * **Other values (float)** - Change the padding botton
