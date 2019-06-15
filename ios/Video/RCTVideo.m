@@ -110,6 +110,8 @@ static int const RCTVideoUnset = -1;
     _playWhenInactive = false;
     _pictureInPicture = false;
     _ignoreSilentSwitch = @"inherit"; // inherit, ignore, obey
+    _textTrackFontSize = -1;
+    -textTrackPaddingBottom = -1;
 #if TARGET_OS_IOS
     _restoreUserInterfaceForPIPStopCompletionHandler = NULL;
 #endif
@@ -980,12 +982,15 @@ static int const RCTVideoUnset = -1;
   [self setControls:_controls];
   [self setAllowsExternalPlayback:_allowsExternalPlayback];
   NSMutableDictionary* textTrackStyleRules = [[NSMutableDictionary alloc] initWithCapacity: 2];
-  if (_textTrackFontSize) {
+  if (_textTrackFontSize != -1) {
     // TODO: Check if 10 is always the default track fontSize
     [textTrackStyleRules setObject:@((_textTrackFontSize / 10) * 100) forKey:(id)kCMTextMarkupAttribute_RelativeFontSize];
   }
-  if (_textTrackPaddingBottom) {
+  if (_textTrackPaddingBottom != -1) {
     [textTrackStyleRules setObject:@(100 - (_textTrackPaddingBottom * 100)) forKey:(id)kCMTextMarkupAttribute_OrthogonalLinePositionPercentageRelativeToWritingDirection];
+  }
+  if(textTrackStyleRules.count > 0) {
+    _player.currentItem.textStyleRules = @[textTrackStyleRules];
   }
 }
 
