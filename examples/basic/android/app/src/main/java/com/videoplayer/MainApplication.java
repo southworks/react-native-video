@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.brentvatne.react.ReactVideoPackage;
+import com.brentvatne.react.ReactVideoPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -24,8 +25,15 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
         new MainReactPackage(),
+<<<<<<< HEAD
             new ReactVideoPackage()
           );
+=======
+            new ReactVideoPackage(),
+            new ReactVideoPackage(),
+        new ReactVideoPackage()
+      );
+>>>>>>> 4f36eb1... update for androidX
     }
   };
 
