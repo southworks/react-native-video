@@ -130,7 +130,7 @@ dependencies {
 
 }
 ```
-**android/settings.gradle**
+**android/gradle.properties**
 
 Migrating to AndroidX:
 
