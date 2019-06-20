@@ -125,7 +125,8 @@ project(':react-native-video').projectDir = new File(rootProject.projectDir, '..
 dependencies {
    ...
     compile project(':react-native-video')
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
++    implementation "androidx.appcompat:appcompat:1.0.0"
+-     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
 
 }
 ```
