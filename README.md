@@ -124,7 +124,9 @@ project(':react-native-video').projectDir = new File(rootProject.projectDir, '..
 ```gradle
 dependencies {
    ...
-   compile project(':react-native-video')
+    compile project(':react-native-video')
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+
 }
 ```
 
@@ -370,7 +372,14 @@ For Android MediaPlayer, you will need to build your own controls or use a packa
 
 Platforms: Android ExoPlayer, iOS, react-native-dom
 
-### DRM
+#### disableFocus
+Determines whether video audio should override background music/audio in Android devices.
+* ** false (default)** - Override background audio/music
+* **true** - Let background audio/music from other apps play
+
+Platforms: Android Exoplayer
+
+#### drm
 
 To setup DRM please follow [this guide](./DRM.md)
 
