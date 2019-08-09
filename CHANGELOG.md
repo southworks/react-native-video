@@ -2,6 +2,7 @@
 
 ### next
 * Upgrade ExoPlayer to from 2.9.3 to 2.10.3
+* Basic support for DRM on iOS and Android [#1445](https://github.com/react-native-community/react-native-video/pull/1445)
 
 ### Version 5.0.1
 * Fix AndroidX Support bad merge
