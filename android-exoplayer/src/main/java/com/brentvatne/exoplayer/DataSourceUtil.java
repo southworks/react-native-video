@@ -28,6 +28,7 @@ public class DataSourceUtil {
     private static DataSource.Factory rawDataSourceFactory = null;
     private static DataSource.Factory defaultDataSourceFactory = null;
     private static String userAgent = null;
+    private static Cache downloadCache = null;
 
     public static void setUserAgent(String userAgent) {
         DataSourceUtil.userAgent = userAgent;
@@ -83,5 +84,22 @@ public class DataSourceUtil {
             okHttpDataSourceFactory.getDefaultRequestProperties().set(requestHeaders);
 
         return okHttpDataSourceFactory;
+    }
+
+    public static Cache getDownloadCache() {
+        return downloadCache;
+    }
+
+    private static Cache buildDownloadCache(File downloadDirectory, ExoDatabaseProvider databaseProvider) {
+        downloadCache = new SimpleCache(
+            downloadDirectory,
+            new NoOpCacheEvictor(),
+            databaseProvider
+        );
+        return downloadCache;
+    }
+
+    public static void setDownloadCache(Cache cache) {
+        downloadCache = cache;
     }
 }

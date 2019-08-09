@@ -209,7 +209,6 @@ class ReactExoplayerView extends FrameLayout implements
 
     private void createViews() {
         clearResumePosition();
-        mediaDataSourceFactory = buildDataSourceFactory(true);
         mainHandler = new Handler();
         if (CookieHandler.getDefault() != DEFAULT_COOKIE_MANAGER) {
             CookieHandler.setDefault(DEFAULT_COOKIE_MANAGER);
@@ -608,7 +607,16 @@ class ReactExoplayerView extends FrameLayout implements
      * @return A new DataSource factory.
      */
     private DataSource.Factory buildDataSourceFactory(boolean useBandwidthMeter) {
-        return DataSourceUtil.getDefaultDataSourceFactory(this.themedReactContext, useBandwidthMeter ? BANDWIDTH_METER : null, requestHeaders);
+        Cache downloadCache = DataSourceUtil.getDownloadCache();
+        DataSource.Factory dataSourceFactory = DataSourceUtil.getDefaultDataSourceFactory(this.themedReactContext, useBandwidthMeter ? BANDWIDTH_METER : null, this.requestHeaders);
+
+        if (downloadCache != null) {
+            return new CacheDataSourceFactory(
+                    downloadCache,
+                    dataSourceFactory
+            );
+        }
+        return dataSourceFactory;
     }
 
     // AudioManager.OnAudioFocusChangeListener implementation
@@ -920,7 +928,7 @@ class ReactExoplayerView extends FrameLayout implements
             this.srcUri = uri;
             this.extension = extension;
             this.requestHeaders = headers;
-            this.mediaDataSourceFactory = DataSourceUtil.getDefaultDataSourceFactory(this.themedReactContext, BANDWIDTH_METER, this.requestHeaders);
+            this.mediaDataSourceFactory = this.buildDataSourceFactory(BANDWIDTH_METER);
 
             if (!isOriginalSourceNull && !isSourceEqual) {
                 reloadSource();
