@@ -342,7 +342,15 @@ static int const RCTVideoUnset = -1;
 - (void)setSrc:(NSDictionary *)source
 {
   _source = source;
+  if (_player && _player.currentItem) {
+    [_player setRate:0.0];
+    [_player pause];
+    [[_player currentItem] cancelPendingSeeks];
+    [_player replaceCurrentItemWithPlayerItem:nil];
+    _playerItem = nil;
+  }
   [self removePlayerLayer];
+  _player = nil;
   [self removePlayerTimeObserver];
   [self removePlayerItemObservers];
 
