@@ -51,7 +51,7 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     private static final String PROP_MIN_LOAD_RETRY_COUNT = "minLoadRetryCount";
     private static final String PROP_MAXIMUM_BIT_RATE = "maxBitRate";
     private static final String PROP_PLAY_IN_BACKGROUND = "playInBackground";
-    private static final String PROP_DISABLE_FOCUS = "disableFocus";
+    private static final String PROP_DISABLE_FOCUS = "disableAudioFocus";
     private static final String PROP_FULLSCREEN = "fullscreen";
     private static final String PROP_USE_TEXTURE_VIEW = "useTextureView";
     private static final String PROP_SELECTED_VIDEO_TRACK = "selectedVideoTrack";
@@ -243,8 +243,8 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     }
 
     @ReactProp(name = PROP_DISABLE_FOCUS, defaultBoolean = false)
-    public void setDisableFocus(final ReactExoplayerView videoView, final boolean disableFocus) {
-        videoView.setDisableFocus(disableFocus);
+    public void setDisableAudioFocus(final ReactExoplayerView videoView, final boolean disableAudioFocus) {
+        videoView.setDisableAudioFocus(disableAudioFocus);
     }
 
     @ReactProp(name = PROP_FULLSCREEN, defaultBoolean = false)

@@ -140,7 +140,7 @@ class ReactExoplayerView extends FrameLayout implements
     private String textTrackType;
     private Dynamic textTrackValue;
     private ReadableArray textTracks;
-    private boolean disableFocus;
+    private boolean disableAudioFocus;
     private float mProgressUpdateInterval = 250.0f;
     private boolean playInBackground = false;
     private Map<String, String> requestHeaders;
@@ -466,7 +466,7 @@ class ReactExoplayerView extends FrameLayout implements
     }
 
     private boolean requestAudioFocus() {
-        if (disableFocus || srcUri == null) {
+        if (disableAudioFocus || srcUri == null) {
             return true;
         }
         int result = audioManager.requestAudioFocus(this,
@@ -510,7 +510,7 @@ class ReactExoplayerView extends FrameLayout implements
         } else {
             initializePlayer();
         }
-        if (!disableFocus) {
+        if (!disableAudioFocus) {
             setKeepScreenOn(true);
         }
     }
@@ -1124,8 +1124,8 @@ class ReactExoplayerView extends FrameLayout implements
         this.playInBackground = playInBackground;
     }
 
-    public void setDisableFocus(boolean disableFocus) {
-        this.disableFocus = disableFocus;
+    public void setDisableAudioFocus(boolean disableAudioFocus) {
+        this.disableAudioFocus = disableAudioFocus;
     }
 
     public void setFullscreen(boolean fullscreen) {

@@ -59,6 +59,7 @@ static int const RCTVideoUnset = -1;
   BOOL _paused;
   BOOL _repeat;
   BOOL _allowsExternalPlayback;
+  BOOL _disableAudioFocus;
   NSArray * _textTracks;
   NSDictionary * _selectedTextTrack;
   NSDictionary * _selectedAudioTrack;
@@ -105,6 +106,7 @@ static int const RCTVideoUnset = -1;
     _playerBufferEmpty = YES;
     _playInBackground = false;
     _allowsExternalPlayback = YES;
+    _disableAudioFocus = NO;
     _playWhenInactive = false;
     _pictureInPicture = false;
     _ignoreSilentSwitch = @"inherit"; // inherit, ignore, obey
@@ -802,6 +804,12 @@ static int const RCTVideoUnset = -1;
   _playInBackground = playInBackground;
 }
 
+- (void)setDisableAudioFocus:(BOOL)disableAudioFocus
+{
+  _disableAudioFocus = disableAudioFocus;
+  [self applyModifiers];
+}
+
 - (void)setAllowsExternalPlayback:(BOOL)allowsExternalPlayback
 {
     _allowsExternalPlayback = allowsExternalPlayback;
@@ -864,9 +872,9 @@ static int const RCTVideoUnset = -1;
     [_player setRate:0.0];
   } else {
     if([_ignoreSilentSwitch isEqualToString:@"ignore"]) {
-      [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+      [self setAudioCategory:AVAudioSessionCategoryPlayback];
     } else if([_ignoreSilentSwitch isEqualToString:@"obey"]) {
-      [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];
+      [self setAudioCategory:AVAudioSessionCategoryAmbient];
     }
     
 	if (@available(iOS 10.0, *) && !_automaticallyWaitsToMinimizeStalling) {
@@ -879,6 +887,15 @@ static int const RCTVideoUnset = -1;
   }
   
   _paused = paused;
+}
+
+- (void)setAudioCategory:(AVAudioSessionCategory)category
+{
+  if (_disableAudioFocus) {
+    [[AVAudioSession sharedInstance] setCategory:category withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+  } else {
+    [[AVAudioSession sharedInstance] setCategory:category error:nil];
+  }
 }
 
 - (float)getCurrentTime
