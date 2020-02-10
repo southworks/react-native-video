@@ -37,4 +37,5 @@ dependencies {
     }
     implementation 'com.squareup.okhttp3:okhttp:3.14.3'
 
+    implementation fileTree(dir: 'mux', include: ['*.aar'])
 }

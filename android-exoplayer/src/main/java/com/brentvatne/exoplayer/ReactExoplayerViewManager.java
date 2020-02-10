@@ -46,6 +46,7 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     private static final String PROP_BUFFER_CONFIG_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = "bufferForPlaybackAfterRebufferMs";
     private static final String PROP_PROGRESS_UPDATE_INTERVAL = "progressUpdateInterval";
     private static final String PROP_REPORT_BANDWIDTH = "reportBandwidth";
+    private static final String PROP_REPORT_ENV_KEY_CRED = "environmentKey";
     private static final String PROP_SEEK = "seek";
     private static final String PROP_RATE = "rate";
     private static final String PROP_MIN_LOAD_RETRY_COUNT = "minLoadRetryCount";
@@ -271,6 +272,11 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     @ReactProp(name = PROP_CONTROLS, defaultBoolean = false)
     public void setControls(final ReactExoplayerView videoView, final boolean controls) {
         videoView.setControls(controls);
+    }
+
+    @ReactProp(name = PROP_REPORT_ENV_KEY_CRED)
+    public void setEnvironmentKey(final ReactExoplayerView videoView, final String environmentKey) {
+        videoView.setEnvironmentKey(environmentKey);
     }
 
     @ReactProp(name = PROP_BUFFER_CONFIG)

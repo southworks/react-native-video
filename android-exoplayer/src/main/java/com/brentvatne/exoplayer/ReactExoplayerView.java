@@ -64,6 +64,10 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Util;
+import android.graphics.Point;
+import com.mux.stats.sdk.core.model.CustomerPlayerData;
+import com.mux.stats.sdk.core.model.CustomerVideoData;
+import com.mux.stats.sdk.muxstats.MuxStatsExoPlayer;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -125,6 +129,9 @@ class ReactExoplayerView extends FrameLayout implements
     private int bufferForPlaybackMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS;
     private int bufferForPlaybackAfterRebufferMs = DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS;
 
+    //MUX DATA exoplayer status
+    private MuxStatsExoPlayer muxStats;
+
     // Props from React
     private Uri srcUri;
     private String extension;
@@ -142,6 +149,7 @@ class ReactExoplayerView extends FrameLayout implements
     private Map<String, String> requestHeaders;
     private boolean mReportBandwidth = false;
     private boolean controls;
+    private String environmentKey;
     // \ End props
 
     // React
@@ -409,6 +417,15 @@ class ReactExoplayerView extends FrameLayout implements
 
                     PlaybackParameters params = new PlaybackParameters(rate, 1f);
                     player.setPlaybackParameters(params);
+
+                    CustomerPlayerData customerPlayerData = new CustomerPlayerData();
+                    customerPlayerData.setEnvironmentKey(environmentKey);
+                    CustomerVideoData customerVideoData = new CustomerVideoData();
+                    customerVideoData.setVideoTitle("Android Exoplayer Video");
+                    muxStats = new MuxStatsExoPlayer( themedReactContext, player, "exoplayer-android", customerPlayerData, customerVideoData);
+                    Point size = new Point();
+                    muxStats.setScreenSize(size.x, size.y);
+                    muxStats.setPlayerView(exoPlayerView.getVideoSurfaceView());
                 }
                 if (playerNeedsSource && srcUri != null) {
                     ArrayList<MediaSource> mediaSourceList = buildTextSources();
@@ -518,6 +535,7 @@ class ReactExoplayerView extends FrameLayout implements
         themedReactContext.removeLifecycleEventListener(this);
         audioBecomingNoisyReceiver.removeListener();
         bandwidthMeter.removeEventListener(this);
+        muxStats.release();
     }
 
     private boolean requestAudioFocus() {
@@ -1248,6 +1266,10 @@ class ReactExoplayerView extends FrameLayout implements
 
     public void setHideShutterView(boolean hideShutterView) {
         exoPlayerView.setHideShutterView(hideShutterView);
+    }
+
+    public void setEnvironmentKey(String environmentKey) {
+        this.environmentKey = environmentKey;
     }
 
     public void setBufferConfig(int newMinBufferMs, int newMaxBufferMs, int newBufferForPlaybackMs, int newBufferForPlaybackAfterRebufferMs) {
