@@ -6,6 +6,8 @@
 #include <MediaAccessibility/MediaAccessibility.h>
 #include <AVFoundation/AVFoundation.h>
 
+#import "../MUXSDKStats/MUXSDKStats.h"
+
 static NSString *const statusKeyPath = @"status";
 static NSString *const playbackLikelyToKeepUpKeyPath = @"playbackLikelyToKeepUp";
 static NSString *const playbackBufferEmptyKeyPath = @"playbackBufferEmpty";
@@ -68,6 +70,7 @@ static int const RCTVideoUnset = -1;
   BOOL _pictureInPicture;
   NSString * _ignoreSilentSwitch;
   NSString * _resizeMode;
+  NSString * _environmentKey;
   BOOL _fullscreen;
   BOOL _fullscreenAutorotate;
   NSString * _fullscreenOrientation;
@@ -88,7 +91,7 @@ static int const RCTVideoUnset = -1;
 {
   if ((self = [super init])) {
     _eventDispatcher = eventDispatcher;
-	  _automaticallyWaitsToMinimizeStalling = YES;
+      _automaticallyWaitsToMinimizeStalling = YES;
     _playbackRateObserverRegistered = NO;
     _isExternalPlaybackActiveObserverRegistered = NO;
     _playbackStalled = NO;
@@ -144,9 +147,14 @@ static int const RCTVideoUnset = -1;
     viewController.showsPlaybackControls = YES;
     viewController.rctDelegate = self;
     viewController.preferredOrientation = _fullscreenOrientation;
-    
     viewController.view.frame = self.bounds;
     viewController.player = player;
+    
+    MUXSDKCustomerPlayerData *playerData = [[MUXSDKCustomerPlayerData alloc] initWithEnvironmentKey:_environmentKey];
+    MUXSDKCustomerVideoData *videoData = [MUXSDKCustomerVideoData new];
+    videoData.videoTitle = @"iOS AVPlayer";
+    [MUXSDKStats monitorAVPlayerViewController:viewController withPlayerName:@"iOS VP" playerData:playerData videoData:videoData];
+    
     return viewController;
 }
 
@@ -797,6 +805,11 @@ static int const RCTVideoUnset = -1;
   _resizeMode = mode;
 }
 
+- (void)setEnvironmentKey:(NSString*)key
+{
+  _environmentKey = key;
+}
+
 - (void)setPlayInBackground:(BOOL)playInBackground
 {
   _playInBackground = playInBackground;
@@ -828,7 +841,7 @@ static int const RCTVideoUnset = -1;
   } else if (_pipController && !_pictureInPicture && [_pipController isPictureInPictureActive]) {
     dispatch_async(dispatch_get_main_queue(), ^{
       [_pipController stopPictureInPicture];
-	});
+    });
   }
   #endif
 }
@@ -963,8 +976,8 @@ static int const RCTVideoUnset = -1;
 
 - (void)setAutomaticallyWaitsToMinimizeStalling:(BOOL)waits
 {
-	_automaticallyWaitsToMinimizeStalling = waits;
-	_player.automaticallyWaitsToMinimizeStalling = waits;
+    _automaticallyWaitsToMinimizeStalling = waits;
+    _player.automaticallyWaitsToMinimizeStalling = waits;
 }
 
 
